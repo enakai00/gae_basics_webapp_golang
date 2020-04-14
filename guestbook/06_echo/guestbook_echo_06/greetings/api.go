@@ -2,12 +2,14 @@ package greetings
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo"
 )
 
 func Register(e *echo.Echo) {
 	e.GET("/api/greetings", greetings)
+	e.GET("/api/greetings/:id", greetingsWithId)
 	e.POST("/api/greetings", addUser)
 }
 
@@ -40,6 +42,20 @@ func greetings(c echo.Context) error {
 	}
 	data := response{Greetings: []userData{igarashi, miyayama}}
 	return c.JSON(http.StatusOK, data)
+}
+
+// e.GET("/api/greetings/:id", greetingsWithId)
+func greetingsWithId(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Server Error")
+	}
+	igarashi := userData{
+		ID:      id,
+		Name:    "Tuyushi Igarashi",
+		Message: "Hello",
+	}
+	return c.JSON(http.StatusOK, igarashi)
 }
 
 // e.POST("/api/greetings", addUser)

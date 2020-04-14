@@ -1,13 +1,16 @@
 package greetings
 
 import (
+	"gae_basics_webapp_golang/guestbook/06_echo/guestbook_echo_01/ds"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo"
 )
 
 func Register(e *echo.Echo) {
 	e.GET("/api/greetings", greetings)
+	e.GET("/api/greetings/:id", greetingsWithId)
 	e.POST("/api/greetings", addUser)
 }
 
@@ -42,17 +45,26 @@ func greetings(c echo.Context) error {
 	return c.JSON(http.StatusOK, data)
 }
 
+// e.GET("/api/greetings/:id", greetingsWithId)
+func greetingsWithId(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Server Error")
+	}
+	igarashi := userData{
+		ID:      id,
+		Name:    "Tuyushi Igarashi",
+		Message: "Hello",
+	}
+	return c.JSON(http.StatusOK, igarashi)
+}
+
 // e.POST("/api/greetings", addUser)
 func addUser(c echo.Context) (err error) {
 	user := new(postData)
 	if err = c.Bind(user); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Server Error")
 	}
-
-	data := userData{
-		ID:      999,
-		Name:    user.Name,
-		Message: user.Message,
-	}
-	return c.JSON(http.StatusOK, data)
+	entity := ds.Insert(user.Name, user.Message)
+	return c.JSON(http.StatusOK, entity)
 }
