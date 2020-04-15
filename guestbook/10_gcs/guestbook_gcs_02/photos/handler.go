@@ -31,7 +31,7 @@ func getPhotos(c echo.Context) error {
 
 	it := client.Bucket(bucketName).Objects(c.Request().Context(), nil)
 	data := []PhotoData{}
-    baseURL := "https://storage.cloud.google.com/" + bucketName + "/"
+	baseURL := "https://storage.cloud.google.com/" + bucketName + "/"
 	for {
 		attrs, err := it.Next()
 		if err == iterator.Done {
