@@ -1,59 +1,59 @@
 package greetings
 
 import (
-	"gae_basics_webapp_golang/guestbook/06_echo/guestbook_echo_01/ds"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/gae_basics_webapp_golang/guestbook/08_datastore/guestbook_datastore_04/ds"
 	"github.com/labstack/echo"
 )
 
 func Register(e *echo.Echo) {
-	e.GET("/api/greetings", getAllMessages)
-	e.GET("/api/greetings/:id", getMessage)
-	e.PUT("/api/greetings/:id", updateMessage)
-	e.POST("/api/greetings", addMessage)
+	e.GET("/api/greetings", getAllGuests)
+	e.POST("/api/greetings", addGuest)
+	e.GET("/api/greetings/:id", getGuest)
+	e.PUT("/api/greetings/:id", updateGuest)
 }
 
-type MessageData struct {
+type GuestData struct {
 	Name    string    `json:"author"`
 	Message string    `json:"message"`
 	Created time.Time `json:"created"`
 	ID      int64     `json:"id"`
 }
 
-// e.GET("/api/greetings", getAllMessages)
-func getAllMessages(c echo.Context) error {
+// e.GET("/api/greetings", getAllGuests)
+func getAllGuests(c echo.Context) error {
 	type response struct {
-		MessageDatas []MessageData `json:"greetings"`
+		Guests []GuestData `json:"greetings"`
 	}
 
 	entities := ds.GetAll()
-	messages := []MessageData{}
+	guests := []GuestData{}
 	for _, entity := range entities {
-		item := MessageData{
+		item := GuestData{
 			Name:    entity.Name,
 			Message: entity.Message,
 			Created: entity.Created,
 			ID:      entity.Key.ID,
 		}
-		messages = append(messages, item)
+		guests = append(guests, item)
 	}
-	return c.JSON(http.StatusOK, response{MessageDatas: messages})
+	return c.JSON(http.StatusOK, response{Guests: guests})
 }
 
-// e.GET("/api/greetings/:id", getMessage)
-func getMessage(c echo.Context) error {
+// e.GET("/api/greetings/:id", getGuest)
+func getGuest(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Server Error")
 	}
 	entity := ds.GetByID(int64(id))
-	if entity == (ds.MessageEntity{}) {
+	if entity == (ds.GuestEntity{}) {
 		return echo.NewHTTPError(http.StatusNotFound, "No existing key")
 	}
-	greet := MessageData{
+	greet := GuestData{
 		Name:    entity.Name,
 		Message: entity.Message,
 		Created: entity.Created,
@@ -62,29 +62,29 @@ func getMessage(c echo.Context) error {
 	return c.JSON(http.StatusOK, greet)
 }
 
-// e.POST("/api/greetings", addMessage)
-func addMessage(c echo.Context) error {
+// e.POST("/api/greetings", addGuest)
+func addGuest(c echo.Context) error {
 	type postData struct {
 		Name    string `json:"author" form:"author" query:"author"`
 		Message string `json:"message" form:"message" query:"message"`
 	}
 
-	user := new(postData)
-	if err := c.Bind(user); err != nil {
+	data := new(postData)
+	if err := c.Bind(data); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Server Error")
 	}
-	entity := ds.Insert(user.Name, user.Message)
-	response := MessageData{
+	entity := ds.Insert(data.Name, data.Message)
+	response := GuestData{
 		Name:    entity.Name,
 		Message: entity.Message,
 		Created: entity.Created,
 		ID:      entity.Key.ID,
 	}
-	return c.JSON(http.StatusOK, response)
+	return c.JSON(http.StatusCreated, response)
 }
 
-// e.PUT("/api/greetings/:id", updateMessage)
-func updateMessage(c echo.Context) error {
+// e.PUT("/api/greetings/:id", updateGuest)
+func updateGuest(c echo.Context) error {
 	type postData struct {
 		Name    string `json:"author" form:"author" query:"author"`
 		Message string `json:"message" form:"message" query:"message"`
@@ -101,7 +101,7 @@ func updateMessage(c echo.Context) error {
 	}
 
 	entity := ds.GetByID(int64(id))
-	if entity == (ds.MessageEntity{}) {
+	if entity == (ds.GuestEntity{}) {
 		return echo.NewHTTPError(http.StatusNotFound, "No existing key")
 	}
 
@@ -109,7 +109,7 @@ func updateMessage(c echo.Context) error {
 	entity.Message = data.Message
 	entity = ds.Update(entity)
 
-	item := MessageData{
+	item := GuestData{
 		Name:    data.Name,
 		Message: data.Message,
 		Created: entity.Created,
@@ -117,4 +117,3 @@ func updateMessage(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, item)
 }
-

@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_01/comments"
-	"github.com/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_01/greetings"
-	"github.com/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_01/handler"
+	"github.com/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_02/comments"
+	"github.com/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_02/greetings"
+	"github.com/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_02/handler"
 	"github.com/labstack/echo"
 )
 
@@ -40,7 +40,6 @@ func init() {
 
 	e.GET("/", home)
 	e.GET("/err500", err500)
-
 }
 
 // e.GET("/", home)

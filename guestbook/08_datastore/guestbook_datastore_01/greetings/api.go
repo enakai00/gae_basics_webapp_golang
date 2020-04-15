@@ -1,70 +1,78 @@
 package greetings
 
 import (
-	"gae_basics_webapp_golang/guestbook/06_echo/guestbook_echo_01/ds"
 	"net/http"
 	"strconv"
+	"time"
 
+	"github.com/gae_basics_webapp_golang/guestbook/08_datastore/guestbook_datastore_01/ds"
 	"github.com/labstack/echo"
 )
 
 func Register(e *echo.Echo) {
-	e.GET("/api/greetings", greetings)
-	e.GET("/api/greetings/:id", greetingsWithId)
-	e.POST("/api/greetings", addUser)
+	e.GET("/api/greetings", getAllGuests)
+	e.POST("/api/greetings", addGuest)
+	e.GET("/api/greetings/:id", getGuest)
 }
 
-type userData struct {
-	ID      int    `json:"ID"`
-	Name    string `json:"author"`
-	Message string `json:"Message"`
+type GuestData struct {
+	Name    string    `json:"author"`
+	Message string    `json:"message"`
+	Created time.Time `json:"created"`
+	ID      int64     `json:"id"`
 }
 
-type postData struct {
-	Name    string `json:"author" form:"author" query:"author"`
-	Message string `json:"Message" form:"Message" query:"Message"`
-}
-
-// e.GET("/api/greetings", greetings)
-func greetings(c echo.Context) error {
+// e.GET("/api/greetings", getAllGuests)
+func getAllGuests(c echo.Context) error {
 	type response struct {
-		Greetings []userData `json:"greetings"`
+		Guests []GuestData `json:"greetings"`
 	}
 
-	igarashi := userData{
+	igarashi := GuestData{
 		ID:      1,
 		Name:    "Tuyushi Igarashi",
 		Message: "Hello",
 	}
-	miyayama := userData{
+	miyayama := GuestData{
 		ID:      2,
 		Name:    "Ryutaro Miyayama",
 		Message: "Looks good to me",
 	}
-	data := response{Greetings: []userData{igarashi, miyayama}}
+	data := response{Guests: []GuestData{igarashi, miyayama}}
 	return c.JSON(http.StatusOK, data)
 }
 
-// e.GET("/api/greetings/:id", greetingsWithId)
-func greetingsWithId(c echo.Context) error {
+// e.GET("/api/greetings/:id", getGuest)
+func getGuest(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Server Error")
 	}
-	igarashi := userData{
-		ID:      id,
+	igarashi := GuestData{
+		ID:      int64(id),
 		Name:    "Tuyushi Igarashi",
 		Message: "Hello",
 	}
 	return c.JSON(http.StatusOK, igarashi)
 }
 
-// e.POST("/api/greetings", addUser)
-func addUser(c echo.Context) (err error) {
-	user := new(postData)
-	if err = c.Bind(user); err != nil {
+// e.POST("/api/greetings", addGuest)
+func addGuest(c echo.Context) error {
+	type postData struct {
+		Name    string `json:"author" form:"author" query:"author"`
+		Message string `json:"message" form:"message" query:"message"`
+	}
+
+	data := new(postData)
+	if err := c.Bind(data); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Server Error")
 	}
-	entity := ds.Insert(user.Name, user.Message)
-	return c.JSON(http.StatusOK, entity)
+	entity := ds.Insert(data.Name, data.Message)
+	response := GuestData{
+		Name:    entity.Name,
+		Message: entity.Message,
+		Created: entity.Created,
+		ID:      entity.Key.ID,
+	}
+	return c.JSON(http.StatusCreated, response)
 }

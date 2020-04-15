@@ -7,7 +7,7 @@ import (
 )
 
 func Register(e *echo.Echo) {
-        e.HTTPErrorHandler = JSONErrorHandler
+	e.HTTPErrorHandler = JSONErrorHandler
 }
 
 type apiError struct {

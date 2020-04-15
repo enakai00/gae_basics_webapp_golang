@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_01/ds"
+	"github.com/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_02/ds"
 	"github.com/labstack/echo"
 )
 
@@ -22,29 +22,28 @@ type CommentData struct {
 // e.GET("/api/comments", getComments)
 func getComments(c echo.Context) error {
 	type queryData struct {
-		ParentID int64  `json:"parent_id" form:"parent_id" query:"parent_id"`
+		ParentID int64 `json:"parent_id" form:"parent_id" query:"parent_id"`
 	}
-    type response struct {
-        Comments []CommentData `json:"comments"`
-    }
+	type response struct {
+		Comments []CommentData `json:"comments"`
+	}
 
 	data := new(queryData)
 	if err := c.Bind(data); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Server Error")
 	}
-    entities := ds.GetComments(data.ParentID)
-    comments := []CommentData{}
-    for _, entity := range entities {
-        item := CommentData{
-            Message:    entity.Message,
-            Created:    entity.Created,
-            ID:         entity.Key.ID,
-        }
-        comments = append(comments, item)
-    }
-    return c.JSON(http.StatusOK, response{Comments: comments})
+	entities := ds.GetComments(data.ParentID)
+	comments := []CommentData{}
+	for _, entity := range entities {
+		item := CommentData{
+			Message: entity.Message,
+			Created: entity.Created,
+			ID:      entity.Key.ID,
+		}
+		comments = append(comments, item)
+	}
+	return c.JSON(http.StatusOK, response{Comments: comments})
 }
-
 
 // e.POST("/api/comments", addComment)
 func addComment(c echo.Context) error {

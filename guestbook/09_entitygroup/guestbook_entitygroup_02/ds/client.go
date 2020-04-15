@@ -11,10 +11,10 @@ import (
 )
 
 var projectID = os.Getenv("GOOGLE_CLOUD_PROJECT")
-var	ctx = context.Background()
+var ctx = context.Background()
 var client, _ = datastore.NewClient(ctx, projectID)
 
-type MessageEntity struct {
+type GuestEntity struct {
 	Name    string         `datastore:"author"`
 	Message string         `datastore:"message"`
 	Created time.Time      `datastore:"created"`
@@ -27,9 +27,9 @@ type CommentEntity struct {
 	Key     *datastore.Key `datastore:"__key__"`
 }
 
-func Insert(author, message string) MessageEntity {
+func Insert(author, message string) GuestEntity {
 	key := datastore.IncompleteKey("Greeting", nil)
-	data := MessageEntity{
+	data := GuestEntity{
 		Name:    author,
 		Message: message,
 		Created: time.Now(),
@@ -43,12 +43,12 @@ func Insert(author, message string) MessageEntity {
 	return data
 }
 
-func GetAll() []MessageEntity {
-	entities := []MessageEntity{}
+func GetAll() []GuestEntity {
+	entities := []GuestEntity{}
 	query := datastore.NewQuery("Greeting").Order("-created")
 	it := client.Run(ctx, query)
 	for {
-		var entity MessageEntity
+		var entity GuestEntity
 		_, err := it.Next(&entity)
 		if err == iterator.Done {
 			break
@@ -61,12 +61,12 @@ func GetAll() []MessageEntity {
 	return entities
 }
 
-func GetByID(id int64) MessageEntity {
+func GetByID(id int64) GuestEntity {
 	key := datastore.IDKey("Greeting", id, nil)
 	query := datastore.NewQuery("Greeting").Filter("__key__ =", key)
 	it := client.Run(ctx, query)
 
-	var entity MessageEntity
+	var entity GuestEntity
 	_, err := it.Next(&entity)
 	if err != iterator.Done && err != nil {
 		log.Fatalf("Error fetching next entity: %v", err)
@@ -74,7 +74,7 @@ func GetByID(id int64) MessageEntity {
 	return entity
 }
 
-func Update(entity MessageEntity) MessageEntity {
+func Update(entity GuestEntity) GuestEntity {
 	_, err := client.Put(ctx, entity.Key, &entity)
 	if err != nil {
 		log.Fatalf("Failed to store data: %v", err)

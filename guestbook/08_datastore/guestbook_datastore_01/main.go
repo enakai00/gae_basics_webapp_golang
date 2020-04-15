@@ -1,14 +1,14 @@
 package main
 
 import (
-	"gae_basics_webapp_golang/guestbook/06_echo/guestbook_echo_01/greetings"
-	"gae_basics_webapp_golang/guestbook/06_echo/guestbook_echo_01/handler"
 	"html/template"
 	"io"
 	"log"
 	"net/http"
 	"os"
 
+	"github.com/gae_basics_webapp_golang/guestbook/08_datastore/guestbook_datastore_01/greetings"
+	"github.com/gae_basics_webapp_golang/guestbook/08_datastore/guestbook_datastore_01/handler"
 	"github.com/labstack/echo"
 )
 
@@ -38,7 +38,6 @@ func init() {
 
 	e.GET("/", home)
 	e.GET("/err500", err500)
-
 }
 
 // e.GET("/", home)
@@ -47,7 +46,7 @@ func home(c echo.Context) error {
 		Message string
 	}
 	data := Data{Message: "App Engine 勉強会 にようこそ"}
-	return c.Render(http.StatusOK, "greeting", data)
+	return c.Render(http.StatusOK, "index", data)
 }
 
 // e.GET("/err500", err500)

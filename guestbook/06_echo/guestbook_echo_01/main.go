@@ -33,14 +33,21 @@ func init() {
 	e.Renderer = t
 
 	e.GET("/", home)
+	e.GET("/err500", err500)
 }
 
+// e.GET("/", home)
 func home(c echo.Context) error {
 	type Data struct {
 		Message string
 	}
 	data := Data{Message: "App Engine 勉強会 にようこそ"}
-	return c.Render(http.StatusOK, "greeting", data)
+	return c.Render(http.StatusOK, "index", data)
+}
+
+// e.GET("/err500", err500)
+func err500(c echo.Context) error {
+	return echo.NewHTTPError(http.StatusInternalServerError, "Server Error")
 }
 
 func main() {
