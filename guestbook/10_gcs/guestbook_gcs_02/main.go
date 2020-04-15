@@ -42,7 +42,6 @@ func init() {
 
 	e.GET("/", home)
 	e.GET("/err500", err500)
-
 }
 
 // e.GET("/", home)
