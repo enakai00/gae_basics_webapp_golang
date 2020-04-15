@@ -28,9 +28,6 @@ type CommentEntity struct {
 }
 
 func Insert(author, message string) MessageEntity {
-//	ctx := context.Background()
-//	client, _ := datastore.NewClient(ctx, projectID)
-
 	key := datastore.IncompleteKey("Greeting", nil)
 	data := MessageEntity{
 		Name:    author,
@@ -47,9 +44,6 @@ func Insert(author, message string) MessageEntity {
 }
 
 func GetAll() []MessageEntity {
-//	ctx := context.Background()
-//	client, _ := datastore.NewClient(ctx, projectID)
-
 	entities := []MessageEntity{}
 	query := datastore.NewQuery("Greeting").Order("-created")
 	it := client.Run(ctx, query)
@@ -68,9 +62,6 @@ func GetAll() []MessageEntity {
 }
 
 func GetByID(id int64) MessageEntity {
-//	ctx := context.Background()
-//	client, _ := datastore.NewClient(ctx, projectID)
-
 	key := datastore.IDKey("Greeting", id, nil)
 	query := datastore.NewQuery("Greeting").Filter("__key__ =", key)
 	it := client.Run(ctx, query)
@@ -84,9 +75,6 @@ func GetByID(id int64) MessageEntity {
 }
 
 func Update(entity MessageEntity) MessageEntity {
-//	ctx := context.Background()
-//	client, _ := datastore.NewClient(ctx, projectID)
-
 	_, err := client.Put(ctx, entity.Key, &entity)
 	if err != nil {
 		log.Fatalf("Failed to store data: %v", err)
@@ -94,10 +82,15 @@ func Update(entity MessageEntity) MessageEntity {
 	return entity
 }
 
-func InsertComment(parentID int64, message string) CommentEntity {
-//	ctx := context.Background()
-//	client, _ := datastore.NewClient(ctx, projectID)
+func Delete(id int64) {
+	key := datastore.IDKey("Greeting", id, nil)
+	err := client.Delete(ctx, key)
+	if err != nil {
+		log.Fatalf("Failed to delete data: %v", err)
+	}
+}
 
+func InsertComment(parentID int64, message string) CommentEntity {
 	parentKey := datastore.IDKey("Greeting", parentID, nil)
 	key := datastore.IncompleteKey("Comment", parentKey)
 	data := CommentEntity{
@@ -111,4 +104,23 @@ func InsertComment(parentID int64, message string) CommentEntity {
 	data.Key = key
 
 	return data
+}
+
+func GetComments(parentID int64) []CommentEntity {
+	entities := []CommentEntity{}
+	ancestor := datastore.IDKey("Greeting", parentID, nil)
+	query := datastore.NewQuery("Comment").Ancestor(ancestor)
+	it := client.Run(ctx, query)
+	for {
+		var entity CommentEntity
+		_, err := it.Next(&entity)
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			log.Fatalf("Error fetching next entity: %v", err)
+		}
+		entities = append(entities, entity)
+	}
+	return entities
 }
