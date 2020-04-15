@@ -1,5 +1,7 @@
 # gae_basics_webapp_golang
 
+Disclaimer: This is not an official Google product.
+
 ## How to deply the final version.
 
 ```
