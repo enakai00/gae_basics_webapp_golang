@@ -36,9 +36,9 @@ func getPhotos(c echo.Context) error {
 func addPhoto(c echo.Context) error {
 	file, _ := c.FormFile("file")
 	src, err := file.Open()
-    if err != nil {
+	if err != nil {
 		log.Fatalf("Failed to open file: %v", err)
-    }
+	}
 	defer src.Close()
 
 	bucket := client.Bucket(bucketName)

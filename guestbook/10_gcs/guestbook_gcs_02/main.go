@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gae_basics_webapp_golang/guestbook/10_gcs/guestbook_gcs_02/comments"
-	"github.com/gae_basics_webapp_golang/guestbook/10_gcs/guestbook_gcs_02/greetings"
-	"github.com/gae_basics_webapp_golang/guestbook/10_gcs/guestbook_gcs_02/handler"
-	"github.com/gae_basics_webapp_golang/guestbook/10_gcs/guestbook_gcs_02/photos"
+	"github.com/enakai00/gae_basics_webapp_golang/guestbook/10_gcs/guestbook_gcs_02/comments"
+	"github.com/enakai00/gae_basics_webapp_golang/guestbook/10_gcs/guestbook_gcs_02/greetings"
+	"github.com/enakai00/gae_basics_webapp_golang/guestbook/10_gcs/guestbook_gcs_02/handler"
+	"github.com/enakai00/gae_basics_webapp_golang/guestbook/10_gcs/guestbook_gcs_02/photos"
 	"github.com/labstack/echo"
 )
 

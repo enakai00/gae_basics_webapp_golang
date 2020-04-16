@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/gae_basics_webapp_golang/guestbook/08_datastore/guestbook_datastore_02/ds"
+	"github.com/enakai00/gae_basics_webapp_golang/guestbook/08_datastore/guestbook_datastore_02/ds"
 	"github.com/labstack/echo"
 )
 

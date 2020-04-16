@@ -1,6 +1,6 @@
-module github.com/gae_basics_webapp_golang/guestbook/06_echo/guestbook_echo_02
+module github.com/enakai00/gae_basics_webapp_golang/guestbook/06_echo/guestbook_echo_02
 
-go 1.14
+go 1.13
 
 require (
 	github.com/labstack/echo v3.3.10+incompatible

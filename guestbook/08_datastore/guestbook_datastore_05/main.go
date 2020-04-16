@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gae_basics_webapp_golang/guestbook/08_datastore/guestbook_datastore_05/greetings"
-	"github.com/gae_basics_webapp_golang/guestbook/08_datastore/guestbook_datastore_05/handler"
+	"github.com/enakai00/gae_basics_webapp_golang/guestbook/08_datastore/guestbook_datastore_05/greetings"
+	"github.com/enakai00/gae_basics_webapp_golang/guestbook/08_datastore/guestbook_datastore_05/handler"
 	"github.com/labstack/echo"
 )
 

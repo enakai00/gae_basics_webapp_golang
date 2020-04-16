@@ -11,7 +11,7 @@ import (
 )
 
 var projectID = os.Getenv("GOOGLE_CLOUD_PROJECT")
-var	ctx = context.Background()
+var ctx = context.Background()
 var client, _ = datastore.NewClient(ctx, projectID)
 
 type GuestEntity struct {

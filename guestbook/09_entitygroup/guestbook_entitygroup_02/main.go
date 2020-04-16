@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_02/comments"
-	"github.com/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_02/greetings"
-	"github.com/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_02/handler"
+	"github.com/enakai00/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_02/comments"
+	"github.com/enakai00/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_02/greetings"
+	"github.com/enakai00/gae_basics_webapp_golang/guestbook/09_entitygroup/guestbook_entitygroup_02/handler"
 	"github.com/labstack/echo"
 )
 
